@@ -50,7 +50,7 @@ public class JukeboxMain {
                     searchArtist(artistDao, songsDao);
                     break;
                 case 4:
-                    viewAllSongs();
+                    viewAllSongs(songsDao);
                     break;
                 case 5:
                     playlist();
@@ -65,7 +65,7 @@ public class JukeboxMain {
                     System.out.println("Invalid choice");
             }
 
-        }while(choice != 7);
+        } while(choice != 7);
     }
 
     private static void searchName(SongsDao songsDao) throws SQLException, ClassNotFoundException {
@@ -92,8 +92,7 @@ public class JukeboxMain {
             }
             System.out.println("\nDo you want to continue? Enter Yes");
             choice2 = sc.nextLine();
-        }
-        while(choice2.equals("Yes"));
+        } while(choice2.equals("Yes"));
     }
 
     private static void searchGenre(GenreDao genreDao, SongsDao songsDao) throws SQLException, ClassNotFoundException {
@@ -130,8 +129,7 @@ public class JukeboxMain {
             }
             System.out.println("\nDo you want to continue? Enter Yes");
             choice2 = sc.nextLine();
-        }
-        while(choice2.equals("Yes"));
+        } while(choice2.equals("Yes"));
     }
 
     private static void printSongList(List<Songs> songList) {
@@ -175,11 +173,21 @@ public class JukeboxMain {
             }
             System.out.println("\nDo you want to continue? Enter Yes");
             choice2 = sc.nextLine();
-        }
-        while(choice2.equals("Yes"));
+        } while(choice2.equals("Yes"));
     }
 
-    private static void viewAllSongs() {
+    private static void viewAllSongs(SongsDao songsDao) throws SQLException, ClassNotFoundException {
+        int choice;
+        List<Songs> songList = songsDao.getAllDetailsOfSongsList();
+        do {
+            System.out.format("%-10s %-30s %-30s %-30s %-30s %-30s\n","Song ID", "Song Name", "Artist", "Genre", "Duration", "Year");
+            for(Songs songs : songList){
+                System.out.format("%-10d %-30s %-30s %-30s %-30s %-30d\n", songs.getSongID(), songs.getNameOfSong(), songs.getArtist().getArtistName(), songs.getGenre().getGenreName(), songs.getDuration(), songs.getYear());
+            }
+            System.out.println("\nDo you want to go back? If yes enter 0");
+            choice = sc.nextInt();
+        } while(choice != 0);
+
     }
 
     private static void playlist() {

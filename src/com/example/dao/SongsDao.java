@@ -1,12 +1,11 @@
 package com.example.dao;
 
+import com.example.data.Artist;
+import com.example.data.Genre;
 import com.example.data.Songs;
 import com.example.util.DbConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +65,26 @@ public class SongsDao {
         while(resultSet.next()){
             songs.setSongID(resultSet.getInt(1));
             songs.setNameOfSong(resultSet.getString(2));
+            songList.add(songs);
+        }
+        return songList;
+    }
+
+    public List<Songs> getAllDetailsOfSongsList() throws SQLException, ClassNotFoundException {
+        List<Songs> songList = new ArrayList<>();
+        Songs songs = new Songs();
+        Connection connection = DbConnection.getConnection();
+        String sql = "Select * from songs";
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        while(resultSet.next()){
+            songs.setSongID(resultSet.getInt(1));
+            songs.setNameOfSong(resultSet.getString(2));
+            songs.setArtist(new Artist(resultSet.getString(3)));
+            songs.setGenre(new Genre(resultSet.getString(4)));
+            songs.setDuration(resultSet.getString(5));
+            songs.setYear(resultSet.getInt(6));
+            songs.setPath(resultSet.getString(7));
             songList.add(songs);
         }
         return songList;
