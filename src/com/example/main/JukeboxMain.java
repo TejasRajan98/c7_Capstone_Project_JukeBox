@@ -45,7 +45,7 @@ public class JukeboxMain {
                     searchName(songsDao);
                     break;
                 case 2:
-                    searchGenre(genreDao, songsDao);
+                    //searchGenre(genreDao, songsDao);
                     break;
                 case 3:
                     searchArtist();
@@ -89,8 +89,9 @@ public class JukeboxMain {
         List<Songs> songList = songsDao.checkSongAndGetResult(name);
         Iterator<Songs> iterator = songList.iterator();
         while (iterator.hasNext()){
-            songId = iterator.next().getSongID();
-            name = iterator.next().getNameOfSong();
+            Songs element = iterator.next();
+            songId = element.getSongID();
+            name = element.getNameOfSong();
             System.out.println("Song ID: " + songId + " Song name: " + name);
         }
         System.out.println("Enter song id: ");
@@ -108,9 +109,32 @@ public class JukeboxMain {
         while(choice != 3);
     }
 
-    private static void searchGenre(GenreDao genreDao, SongsDao songsDao){
-
-    }
+   /* private static void searchGenre(GenreDao genreDao, SongsDao songsDao){
+        int choice;
+        System.out.println("Enter genre name: ");
+        String name = sc.nextLine();
+        int genreId;
+        List<Songs> genreList = songsDao.checkSongAndGetResult(name);
+        Iterator<Songs> iterator = genreList.iterator();
+        while (iterator.hasNext()){
+            genreId = iterator.next().getSongID();
+            name = iterator.next().getNameOfSong();
+            System.out.println("Song ID: " + genreId + " Song name: " + name);
+        }
+        System.out.println("Enter song id: ");
+        genreId = sc.nextInt();
+        do {
+            System.out.println("\n1. Play/Pause \n2. Add to playlist \n3. Go back \nEnter choice: ");
+            choice = sc.nextInt();
+            if (choice == 1)
+                System.out.println("Playing song");
+            else if (choice == 2)
+                System.out.println("Added to playlist");
+            else if (choice == 3)
+                System.out.println("Going back");
+        }
+        while(choice != 3);
+    }*/
 
     private static void searchArtist() {
     }
