@@ -38,4 +38,36 @@ public class SongsDao {
         }
         return songList;
     }
+
+    public List<Songs> checkGenreAndGetList(String name) throws SQLException, ClassNotFoundException {
+        List<Songs> songList = new ArrayList<>();
+        Songs songs = new Songs();
+        Connection connection = DbConnection.getConnection();
+        String sql = "Select song_id, song_name from songs where genre = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()){
+            songs.setSongID(resultSet.getInt(1));
+            songs.setNameOfSong(resultSet.getString(2));
+            songList.add(songs);
+        }
+        return songList;
+    }
+
+    public List<Songs> checkArtistAndGetList(String name) throws SQLException, ClassNotFoundException {
+        List<Songs> songList = new ArrayList<>();
+        Songs songs = new Songs();
+        Connection connection = DbConnection.getConnection();
+        String sql = "Select song_id, song_name from songs where artist = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()){
+            songs.setSongID(resultSet.getInt(1));
+            songs.setNameOfSong(resultSet.getString(2));
+            songList.add(songs);
+        }
+        return songList;
+    }
 }

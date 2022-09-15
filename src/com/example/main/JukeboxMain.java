@@ -47,7 +47,7 @@ public class JukeboxMain {
                     searchGenre(genreDao, songsDao);
                     break;
                 case 3:
-                    searchArtist();
+                    searchArtist(artistDao, songsDao);
                     break;
                 case 4:
                     viewAllSongs();
@@ -66,58 +66,117 @@ public class JukeboxMain {
             }
 
         }while(choice != 7);
-
-        /*artist.setArtistName("Taylor");
-        genre.setGenreName("Pop");
-        songs.setNameOfSong("Blank Space");
-
-        artistId = artistDao.checkAndGetArtistId(artist);
-        genreId = genreDao.checkAndGetGGenreId(genre);
-        songId = songsDao.checkAndGetSongID(songs);
-
-        System.out.println("artistId = " + artistId);
-        System.out.println("genreId = " + genreId);
-        System.out.println("songId = " + songId);*/
     }
 
     private static void searchName(SongsDao songsDao) throws SQLException, ClassNotFoundException {
         int choice;
-        System.out.println("Enter song name: ");
+        String choice2;
+        System.out.println("\nEnter song name: ");
         String name = sc.nextLine();
         int songId;
         List<Songs> songList = songsDao.checkSongAndGetList(name);
-        for(Songs songs : songList){
-            songId = songs.getSongID();
-            name = songs.getNameOfSong();
-            System.out.println("Song ID: " + songId + " Song name: " + name);
-        }
-        /*Iterator<Songs> iterator = songList.iterator();
-        while (iterator.hasNext()){
-            Songs element = iterator.next();
-            songId = element.getSongID();
-            name = element.getNameOfSong();
-            System.out.println("Song ID: " + songId + " Song name: " + name);
-        }*/
-        System.out.println("Enter song id: ");
-        songId = sc.nextInt();
         do {
+            printSongList(songList);
+            System.out.println("\nEnter song id: ");
+            songId = sc.nextInt();
             System.out.println("\n1. Play/Pause \n2. Add to playlist \n3. Go back \nEnter choice: ");
             choice = sc.nextInt();
+            sc.nextLine();
             if (choice == 1)
                 System.out.println("Playing song");
             else if (choice == 2)
                 System.out.println("Added to playlist");
-            else if (choice == 3)
+            else if (choice == 3) {
                 System.out.println("Going back");
+                break;
+            }
+            System.out.println("\nDo you want to continue? Enter Yes");
+            choice2 = sc.nextLine();
         }
-        while(choice != 3);
+        while(choice2.equals("Yes"));
     }
 
-    private static void searchGenre(GenreDao genreDao, SongsDao songsDao){
-
+    private static void searchGenre(GenreDao genreDao, SongsDao songsDao) throws SQLException, ClassNotFoundException {
+        int choice;
+        String choice2;
+        String name = null;
+        List<Genre> genreList = genreDao.checkAndGetGenreList();
+        for(Genre genre: genreList){
+            System.out.println("\n" + genre.getGenreID() + ". " + genre.getGenreName());
+        }
+        System.out.println("\nEnter choice of genre: ");
+        choice = sc.nextInt();
+        for(Genre genre: genreList){
+            if(genre.getGenreID() == choice)
+                name = genre.getGenreName();
+        }
+        System.out.println("\nSongs of selected genre: ");
+        List<Songs> songList = songsDao.checkGenreAndGetList(name);
+        int songId;
+        do {
+            printSongList(songList);
+            System.out.println("\nEnter song id: ");
+            songId = sc.nextInt();
+            System.out.println("\n1. Play/Pause \n2. Add to playlist \n3. Go back \nEnter choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+            if (choice == 1)
+                System.out.println("Playing song");
+            else if (choice == 2)
+                System.out.println("Added to playlist");
+            else if (choice == 3) {
+                System.out.println("Going back");
+                break;
+            }
+            System.out.println("\nDo you want to continue? Enter Yes");
+            choice2 = sc.nextLine();
+        }
+        while(choice2.equals("Yes"));
     }
 
-    private static void searchArtist() {
+    private static void printSongList(List<Songs> songList) {
+        System.out.format("%-10s %-30s\n","Song ID", "Song Name");
+        for(Songs songs : songList){
+            System.out.format("%-10d %-30s\n", songs.getSongID(), songs.getNameOfSong());
+        }
+    }
+
+    private static void searchArtist(ArtistDao artistDao, SongsDao songsDao) throws SQLException, ClassNotFoundException {
+        int choice;
+        String choice2;
+        String name = null;
+        List<Artist> artistList = artistDao.checkAndGetArtistList();
+        for(Artist artist: artistList){
+            System.out.println("\n" + artist.getArtistID() + ". " + artist.getArtistName());
+        }
+        System.out.println("\nEnter choice of artist: ");
+        choice = sc.nextInt();
+        for(Artist artist: artistList){
+            if(artist.getArtistID() == choice)
+                name = artist.getArtistName();
+        }
+        System.out.println("\nSongs of artist " + name + ": ");
+        List<Songs> songList = songsDao.checkArtistAndGetList(name);
+        int songId;
+        do {
+            printSongList(songList);
+            System.out.println("\nEnter song id: ");
+            songId = sc.nextInt();
+            System.out.println("\n1. Play/Pause \n2. Add to playlist \n3. Go back \nEnter choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+            if (choice == 1)
+                System.out.println("Playing song");
+            else if (choice == 2)
+                System.out.println("Added to playlist");
+            else if (choice == 3) {
+                System.out.println("Going back");
+                break;
+            }
+            System.out.println("\nDo you want to continue? Enter Yes");
+            choice2 = sc.nextLine();
+        }
+        while(choice2.equals("Yes"));
     }
 
     private static void viewAllSongs() {
