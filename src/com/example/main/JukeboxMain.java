@@ -7,7 +7,6 @@ import com.example.data.Artist;
 import com.example.data.Genre;
 import com.example.data.Songs;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -29,7 +28,7 @@ public class JukeboxMain {
 
         System.out.println("\nWelcome to Jukebox\n");
         do{
-            System.out.println("Search based on");
+            System.out.println("\nSearch based on");
             System.out.println("1. Name of song");
             System.out.println("2. Genre of song");
             System.out.println("3. Artist of song\n");
@@ -45,7 +44,7 @@ public class JukeboxMain {
                     searchName(songsDao);
                     break;
                 case 2:
-                    //searchGenre(genreDao, songsDao);
+                    searchGenre(genreDao, songsDao);
                     break;
                 case 3:
                     searchArtist();
@@ -86,14 +85,19 @@ public class JukeboxMain {
         System.out.println("Enter song name: ");
         String name = sc.nextLine();
         int songId;
-        List<Songs> songList = songsDao.checkSongAndGetResult(name);
-        Iterator<Songs> iterator = songList.iterator();
+        List<Songs> songList = songsDao.checkSongAndGetList(name);
+        for(Songs songs : songList){
+            songId = songs.getSongID();
+            name = songs.getNameOfSong();
+            System.out.println("Song ID: " + songId + " Song name: " + name);
+        }
+        /*Iterator<Songs> iterator = songList.iterator();
         while (iterator.hasNext()){
             Songs element = iterator.next();
             songId = element.getSongID();
             name = element.getNameOfSong();
             System.out.println("Song ID: " + songId + " Song name: " + name);
-        }
+        }*/
         System.out.println("Enter song id: ");
         songId = sc.nextInt();
         do {
@@ -109,32 +113,9 @@ public class JukeboxMain {
         while(choice != 3);
     }
 
-   /* private static void searchGenre(GenreDao genreDao, SongsDao songsDao){
-        int choice;
-        System.out.println("Enter genre name: ");
-        String name = sc.nextLine();
-        int genreId;
-        List<Songs> genreList = songsDao.checkSongAndGetResult(name);
-        Iterator<Songs> iterator = genreList.iterator();
-        while (iterator.hasNext()){
-            genreId = iterator.next().getSongID();
-            name = iterator.next().getNameOfSong();
-            System.out.println("Song ID: " + genreId + " Song name: " + name);
-        }
-        System.out.println("Enter song id: ");
-        genreId = sc.nextInt();
-        do {
-            System.out.println("\n1. Play/Pause \n2. Add to playlist \n3. Go back \nEnter choice: ");
-            choice = sc.nextInt();
-            if (choice == 1)
-                System.out.println("Playing song");
-            else if (choice == 2)
-                System.out.println("Added to playlist");
-            else if (choice == 3)
-                System.out.println("Going back");
-        }
-        while(choice != 3);
-    }*/
+    private static void searchGenre(GenreDao genreDao, SongsDao songsDao){
+
+    }
 
     private static void searchArtist() {
     }

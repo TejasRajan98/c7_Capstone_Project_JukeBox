@@ -23,7 +23,7 @@ public class SongsDao {
         }
         return songId;
     }
-    public List<Songs> checkSongAndGetResult(String song) throws SQLException, ClassNotFoundException {
+    public List<Songs> checkSongAndGetList(String song) throws SQLException, ClassNotFoundException {
         List<Songs> songList = new ArrayList<>();
         Songs songs = new Songs();
         Connection connection = DbConnection.getConnection();
