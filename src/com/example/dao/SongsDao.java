@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SongsDao {
     public int checkAndGetSongID(Songs songs) throws SQLException, ClassNotFoundException {
@@ -20,5 +22,20 @@ public class SongsDao {
             songId = resultSet.getInt(1);
         }
         return songId;
+    }
+    public List<Songs> checkSongAndGetResult(String song) throws SQLException, ClassNotFoundException {
+        List<Songs> songList = new ArrayList<>();
+        Songs songs = new Songs();
+        Connection connection = DbConnection.getConnection();
+        String sql = "Select song_id, song_name from songs where song_name like ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, '%' + song + '%');
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()){
+            songs.setSongID(resultSet.getInt(1));
+            songs.setNameOfSong(resultSet.getString(2));
+            songList.add(songs);
+        }
+        return songList;
     }
 }
