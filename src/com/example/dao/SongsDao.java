@@ -89,4 +89,17 @@ public class SongsDao {
         }
         return songList;
     }
+
+    public String checkIdAndGetSong(int songId) throws SQLException, ClassNotFoundException {
+        String filePath = null;
+        Connection connection = DbConnection.getConnection();
+        String sql = "Select root_source from songs where song_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, songId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            filePath = resultSet.getString(1);
+        }
+        return filePath;
+    }
 }

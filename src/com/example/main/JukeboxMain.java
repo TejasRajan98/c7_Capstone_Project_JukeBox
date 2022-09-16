@@ -6,21 +6,19 @@ import com.example.dao.SongsDao;
 import com.example.data.Artist;
 import com.example.data.Genre;
 import com.example.data.Songs;
+import com.example.util.AudioPlayer;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
 public class JukeboxMain {
+    static String status = "paused";
     static Scanner sc = new Scanner(System.in);
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        int artistId;
-        int genreId;
-        int songId;
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
         int choice;
-
-        Artist artist = new Artist();
-        Genre genre = new Genre();
-        Songs songs = new Songs();
 
         ArtistDao artistDao = new ArtistDao();
         GenreDao genreDao = new GenreDao();
@@ -68,7 +66,7 @@ public class JukeboxMain {
         } while(choice != 7);
     }
 
-    private static void searchName(SongsDao songsDao) throws SQLException, ClassNotFoundException {
+    private static void searchName(SongsDao songsDao) throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
         int choice;
         String choice2;
         System.out.println("\nEnter song name: ");
@@ -83,7 +81,7 @@ public class JukeboxMain {
             choice = sc.nextInt();
             sc.nextLine();
             if (choice == 1)
-                System.out.println("Playing song");
+                playOrPauseSong(songId);
             else if (choice == 2)
                 System.out.println("Added to playlist");
             else if (choice == 3) {
@@ -93,6 +91,27 @@ public class JukeboxMain {
             System.out.println("\nDo you want to continue? Enter Yes");
             choice2 = sc.nextLine();
         } while(choice2.equals("Yes"));
+    }
+
+    private static void playOrPauseSong(int songId) throws UnsupportedAudioFileException, LineUnavailableException, IOException, SQLException, ClassNotFoundException {
+        int choice;
+        SongsDao songsDao = new SongsDao();
+        String filePath = songsDao.checkIdAndGetSong(songId);
+        AudioPlayer audioPlayer = new AudioPlayer(filePath);
+        audioPlayer.play();
+        do{
+            System.out.println("\n1. Play \n2. Pause \n3. Exit \nEnter choice :");
+            choice = sc.nextInt();
+            if(choice == 1)
+                audioPlayer.resume();
+            else if(choice == 2)
+                audioPlayer.pause();
+
+        } while(choice != 3);
+        if(status.equals("paused"))
+            status = audioPlayer.play();
+        else
+            status = audioPlayer.pause();
     }
 
     private static void searchGenre(GenreDao genreDao, SongsDao songsDao) throws SQLException, ClassNotFoundException {
