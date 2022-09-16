@@ -106,15 +106,13 @@ public class JukeboxMain {
                 audioPlayer.resume();
             else if(choice == 2)
                 audioPlayer.pause();
+            else
+                audioPlayer.pause();
 
         } while(choice != 3);
-        if(status.equals("paused"))
-            status = audioPlayer.play();
-        else
-            status = audioPlayer.pause();
     }
 
-    private static void searchGenre(GenreDao genreDao, SongsDao songsDao) throws SQLException, ClassNotFoundException {
+    private static void searchGenre(GenreDao genreDao, SongsDao songsDao) throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
         int choice;
         String choice2;
         String name = null;
@@ -139,7 +137,7 @@ public class JukeboxMain {
             choice = sc.nextInt();
             sc.nextLine();
             if (choice == 1)
-                System.out.println("Playing song");
+                playOrPauseSong(songId);
             else if (choice == 2)
                 System.out.println("Added to playlist");
             else if (choice == 3) {
@@ -158,7 +156,7 @@ public class JukeboxMain {
         }
     }
 
-    private static void searchArtist(ArtistDao artistDao, SongsDao songsDao) throws SQLException, ClassNotFoundException {
+    private static void searchArtist(ArtistDao artistDao, SongsDao songsDao) throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
         int choice;
         String choice2;
         String name = null;
@@ -183,7 +181,7 @@ public class JukeboxMain {
             choice = sc.nextInt();
             sc.nextLine();
             if (choice == 1)
-                System.out.println("Playing song");
+                playOrPauseSong(songId);
             else if (choice == 2)
                 System.out.println("Added to playlist");
             else if (choice == 3) {
