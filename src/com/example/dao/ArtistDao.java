@@ -24,12 +24,13 @@ public class ArtistDao {
 
     public List<Artist> checkAndGetArtistList() throws SQLException, ClassNotFoundException {
         List<Artist> artistList = new ArrayList<>();
-        Artist artist = new Artist();
+        Artist artist;
         Connection connection = DbConnection.getConnection();
         String sql = "Select artist_id, artist_name from artist";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         while(resultSet.next()){
+            artist = new Artist();
             artist.setArtistID(resultSet.getInt(1));
             artist.setArtistName(resultSet.getString(2));
             artistList.add(artist);

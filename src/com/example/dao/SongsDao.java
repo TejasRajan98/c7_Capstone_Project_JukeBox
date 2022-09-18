@@ -24,13 +24,14 @@ public class SongsDao {
     }
     public List<Songs> checkSongAndGetList(String song) throws SQLException, ClassNotFoundException {
         List<Songs> songList = new ArrayList<>();
-        Songs songs = new Songs();
+        Songs songs;
         Connection connection = DbConnection.getConnection();
         String sql = "Select song_id, song_name from songs where song_name like ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, '%' + song + '%');
         ResultSet resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
+            songs = new Songs();
             songs.setSongID(resultSet.getInt(1));
             songs.setNameOfSong(resultSet.getString(2));
             songList.add(songs);
@@ -40,13 +41,14 @@ public class SongsDao {
 
     public List<Songs> checkGenreAndGetList(String name) throws SQLException, ClassNotFoundException {
         List<Songs> songList = new ArrayList<>();
-        Songs songs = new Songs();
+        Songs songs;
         Connection connection = DbConnection.getConnection();
         String sql = "Select song_id, song_name from songs where genre = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, name);
         ResultSet resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
+            songs = new Songs();
             songs.setSongID(resultSet.getInt(1));
             songs.setNameOfSong(resultSet.getString(2));
             songList.add(songs);
@@ -56,13 +58,14 @@ public class SongsDao {
 
     public List<Songs> checkArtistAndGetList(String name) throws SQLException, ClassNotFoundException {
         List<Songs> songList = new ArrayList<>();
-        Songs songs = new Songs();
+        Songs songs;
         Connection connection = DbConnection.getConnection();
         String sql = "Select song_id, song_name from songs where artist = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, name);
         ResultSet resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
+            songs = new Songs();
             songs.setSongID(resultSet.getInt(1));
             songs.setNameOfSong(resultSet.getString(2));
             songList.add(songs);
@@ -72,12 +75,13 @@ public class SongsDao {
 
     public List<Songs> getAllDetailsOfSongsList() throws SQLException, ClassNotFoundException {
         List<Songs> songList = new ArrayList<>();
-        Songs songs = new Songs();
+        Songs songs;
         Connection connection = DbConnection.getConnection();
         String sql = "Select * from songs";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         while(resultSet.next()){
+            songs = new Songs();
             songs.setSongID(resultSet.getInt(1));
             songs.setNameOfSong(resultSet.getString(2));
             songs.setArtist(new Artist(resultSet.getString(3)));

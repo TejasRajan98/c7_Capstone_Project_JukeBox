@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class JukeboxMain {
-    static String status = "paused";
     static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
         int choice;
@@ -102,6 +101,7 @@ public class JukeboxMain {
         do{
             System.out.println("\n1. Play \n2. Pause \n3. Exit \nEnter choice :");
             choice = sc.nextInt();
+            sc.nextLine();
             if(choice == 1)
                 audioPlayer.resume();
             else if(choice == 2)
