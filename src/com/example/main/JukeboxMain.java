@@ -117,8 +117,9 @@ public class JukeboxMain {
         String choice2;
         String name = null;
         List<Genre> genreList = genreDao.checkAndGetGenreList();
+        System.out.println();
         for(Genre genre: genreList){
-            System.out.println("\n" + genre.getGenreID() + ". " + genre.getGenreName());
+            System.out.println(genre.getGenreID() + ". " + genre.getGenreName());
         }
         System.out.println("\nEnter choice of genre: ");
         choice = sc.nextInt();
@@ -161,8 +162,9 @@ public class JukeboxMain {
         String choice2;
         String name = null;
         List<Artist> artistList = artistDao.checkAndGetArtistList();
+        System.out.println();
         for(Artist artist: artistList){
-            System.out.println("\n" + artist.getArtistID() + ". " + artist.getArtistName());
+            System.out.println(artist.getArtistID() + ". " + artist.getArtistName());
         }
         System.out.println("\nEnter choice of artist: ");
         choice = sc.nextInt();
