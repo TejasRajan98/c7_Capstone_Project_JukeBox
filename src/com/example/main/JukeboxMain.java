@@ -122,7 +122,7 @@ public class JukeboxMain {
     private static void playOrPauseSong(int songId) throws UnsupportedAudioFileException, LineUnavailableException, IOException, SQLException, ClassNotFoundException {
         int choice;
         SongsDao songsDao = new SongsDao();
-        String filePath = songsDao.checkIdAndGetSong(songId);
+        String filePath = songsDao.checkIdAndGetSongRoot(songId);
         AudioPlayer audioPlayer = new AudioPlayer(filePath);
         audioPlayer.play();
         do{
@@ -227,7 +227,7 @@ public class JukeboxMain {
         int choice;
         List<Songs> songList = songsDao.getAllDetailsOfSongsList();
         do {
-            System.out.println("\n=============================================");
+            System.out.println("\n========================================================================================================================");
             System.out.format("%-10s %-30s %-30s %-30s %-30s %-30s\n","Song ID", "Song Name", "Artist", "Genre", "Duration", "Year");
             for(Songs songs : songList){
                 System.out.format("%-10d %-30s %-30s %-30s %-30s %-30d\n", songs.getSongID(), songs.getNameOfSong(), songs.getArtist().getArtistName(), songs.getGenre().getGenreName(), songs.getDuration(), songs.getYear());
@@ -311,6 +311,7 @@ public class JukeboxMain {
 
     private static void playOrPauseSong(String content) throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
         int choice, i;
+        String name;
         SongsDao songsDao = new SongsDao();
         String[] split = content.split(",");
         int[] songIds = new int[split.length];
@@ -318,24 +319,33 @@ public class JukeboxMain {
         for(i = 0; i < split.length - 1; i++)
             songIds[i] = Integer.parseInt(split[i].trim());
         i= 0;
-        String filePath = songsDao.checkIdAndGetSong(songIds[i]);
+        String filePath = songsDao.checkIdAndGetSongRoot(songIds[i]);
         AudioPlayer audioPlayer = new AudioPlayer(filePath);
         audioPlayer.play();
+        name = songsDao.checkIdAndGetSongName(songIds[i]);
+        System.out.println("\nPlaying " + name);
         do{
             System.out.println("\n1. Play \n2. Pause \n3. Next \n4. Previous \n5. Exit \nEnter choice :");
             choice = sc.nextInt();
             sc.nextLine();
-            if(choice == 1)
+            if(choice == 1) {
                 audioPlayer.resume();
-            else if(choice == 2)
+                name = songsDao.checkIdAndGetSongName(songIds[i]);
+                System.out.println("\nPlaying " + name);
+            }
+            else if(choice == 2) {
+                System.out.println("\nPaused");
                 audioPlayer.pause();
+            }
             else if(choice == 3) {
                 if (i == count - 1)
                     i = 0;
                 else
                     i++;
+                name = songsDao.checkIdAndGetSongName(songIds[i]);
+                System.out.println("\nPlaying " + name);
                 audioPlayer.pause();
-                filePath = songsDao.checkIdAndGetSong(songIds[i]);
+                filePath = songsDao.checkIdAndGetSongRoot(songIds[i]);
                 audioPlayer = new AudioPlayer(filePath);
                 audioPlayer.play();
             }
@@ -344,8 +354,10 @@ public class JukeboxMain {
                     i = count -1;
                 else
                     i--;
+                name = songsDao.checkIdAndGetSongName(songIds[i]);
+                System.out.println("\nPlaying " + name);
                 audioPlayer.pause();
-                filePath = songsDao.checkIdAndGetSong(songIds[i]);
+                filePath = songsDao.checkIdAndGetSongRoot(songIds[i]);
                 audioPlayer = new AudioPlayer(filePath);
                 audioPlayer.play();
             }

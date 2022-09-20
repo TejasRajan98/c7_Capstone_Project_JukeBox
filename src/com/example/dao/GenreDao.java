@@ -8,19 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenreDao {
-    public int checkAndGetGGenreId(Genre genre) throws SQLException, ClassNotFoundException {
-        int genreId = 0;
-        Connection connection = DbConnection.getConnection();
-        String sql = "Select genre_id from genre where genre_name = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, genre.getGenreName());
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next()) {
-            genreId = resultSet.getInt(1);
-        }
-        return genreId;
-    }
-
     public List<Genre> checkAndGetGenreList() throws SQLException, ClassNotFoundException {
         List<Genre> genreList = new ArrayList<>();
         Genre genre;

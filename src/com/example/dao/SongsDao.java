@@ -10,18 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SongsDao {
-    public int checkAndGetSongID(Songs songs) throws SQLException, ClassNotFoundException {
-        int songId = 0;
-        Connection connection = DbConnection.getConnection();
-        String sql = "Select song_id from songs where song_name = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, songs.getNameOfSong());
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next()) {
-            songId = resultSet.getInt(1);
-        }
-        return songId;
-    }
     public List<Songs> checkSongAndGetList(String song) throws SQLException, ClassNotFoundException {
         List<Songs> songList = new ArrayList<>();
         Songs songs;
@@ -94,7 +82,7 @@ public class SongsDao {
         return songList;
     }
 
-    public String checkIdAndGetSong(int songId) throws SQLException, ClassNotFoundException {
+    public String checkIdAndGetSongRoot(int songId) throws SQLException, ClassNotFoundException {
         String filePath = null;
         Connection connection = DbConnection.getConnection();
         String sql = "Select root_source from songs where song_id = ?";
@@ -124,5 +112,18 @@ public class SongsDao {
             }
         }
         return songsList;
+    }
+
+    public String checkIdAndGetSongName(int songId) throws SQLException, ClassNotFoundException {
+        String songName = null;
+        Connection connection = DbConnection.getConnection();
+        String sql = "Select song_name from songs where song_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, songId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            songName = resultSet.getString(1);
+        }
+        return songName;
     }
 }
