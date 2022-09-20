@@ -25,7 +25,9 @@ public class JukeboxMain {
         GenreDao genreDao = new GenreDao();
         SongsDao songsDao = new SongsDao();
 
-        System.out.println("\nWelcome to Jukebox\n");
+        System.out.println("\n=============================================");
+        System.out.println("\nWelcome to Jukebox");
+        System.out.println("\n=============================================");
         do{
             System.out.println("\nSearch based on");
             System.out.println("1. Name of song");
@@ -36,26 +38,33 @@ public class JukeboxMain {
             System.out.println("6. Jukebox operations");
             System.out.println("7. Exit");
             System.out.println("\nEnter choice: ");
+            System.out.println("\n=============================================");
             choice = sc.nextInt();
             sc.nextLine();
             switch (choice){
                 case 1:
                     searchName(songsDao);
+                    System.out.println("\n=============================================");
                     break;
                 case 2:
                     searchGenre(genreDao, songsDao);
+                    System.out.println("\n=============================================");
                     break;
                 case 3:
                     searchArtist(artistDao, songsDao);
+                    System.out.println("\n=============================================");
                     break;
                 case 4:
                     viewAllSongs(songsDao);
+                    System.out.println("\n=============================================");
                     break;
                 case 5:
                     playlist();
+                    System.out.println("\n=============================================");
                     break;
                 case 6:
                     jukeboxOperations();
+                    System.out.println("\n=============================================");
                     break;
                 case 7:
                     System.out.println("Exiting\n");
@@ -169,6 +178,7 @@ public class JukeboxMain {
     }
 
     private static void printSongList(List<Songs> songList) {
+        System.out.println("\n=============================================");
         System.out.format("%-10s %-30s\n","Song ID", "Song Name");
         for(Songs songs : songList){
             System.out.format("%-10d %-30s\n", songs.getSongID(), songs.getNameOfSong());
@@ -217,6 +227,7 @@ public class JukeboxMain {
         int choice;
         List<Songs> songList = songsDao.getAllDetailsOfSongsList();
         do {
+            System.out.println("\n=============================================");
             System.out.format("%-10s %-30s %-30s %-30s %-30s %-30s\n","Song ID", "Song Name", "Artist", "Genre", "Duration", "Year");
             for(Songs songs : songList){
                 System.out.format("%-10d %-30s %-30s %-30s %-30s %-30d\n", songs.getSongID(), songs.getNameOfSong(), songs.getArtist().getArtistName(), songs.getGenre().getGenreName(), songs.getDuration(), songs.getYear());
