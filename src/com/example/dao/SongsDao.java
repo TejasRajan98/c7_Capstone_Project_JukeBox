@@ -106,4 +106,23 @@ public class SongsDao {
         }
         return filePath;
     }
+
+    public List<Songs> getSongsList(int[] songIds) throws SQLException, ClassNotFoundException {
+        List<Songs> songsList = new ArrayList<>();
+        Songs songs;
+        Connection connection = DbConnection.getConnection();
+        for (int songId : songIds) {
+            songs = new Songs();
+            String sql = "Select song_id, song_name from songs where song_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, songId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                songs.setSongID(resultSet.getInt(1));
+                songs.setNameOfSong((resultSet.getString(2)));
+                songsList.add(songs);
+            }
+        }
+        return songsList;
+    }
 }

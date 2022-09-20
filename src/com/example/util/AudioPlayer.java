@@ -17,10 +17,9 @@ public class AudioPlayer {
         clip.open(audioInputStream);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
-    public String play() {
+    public void play() {
         clip.start();
         status = "play";
-        return  status;
     }
 
     private void resetAudioStream() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
@@ -29,11 +28,10 @@ public class AudioPlayer {
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public String pause() {
+    public void pause() {
         this.currentFrame = this.clip.getMicrosecondPosition();
         clip.stop();
         status = "paused";
-        return status;
     }
 
     public void resume() throws UnsupportedAudioFileException, LineUnavailableException, IOException {

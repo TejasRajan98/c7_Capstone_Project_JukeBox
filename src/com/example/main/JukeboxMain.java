@@ -2,9 +2,11 @@ package com.example.main;
 
 import com.example.dao.ArtistDao;
 import com.example.dao.GenreDao;
+import com.example.dao.PlaylistDao;
 import com.example.dao.SongsDao;
 import com.example.data.Artist;
 import com.example.data.Genre;
+import com.example.data.Playlist;
 import com.example.data.Songs;
 import com.example.util.AudioPlayer;
 
@@ -82,7 +84,7 @@ public class JukeboxMain {
             if (choice == 1)
                 playOrPauseSong(songId);
             else if (choice == 2)
-                System.out.println("Added to playlist");
+                addToPlaylist(songId);
             else if (choice == 3) {
                 System.out.println("Going back");
                 break;
@@ -90,6 +92,22 @@ public class JukeboxMain {
             System.out.println("\nDo you want to continue? Enter Yes");
             choice2 = sc.nextLine();
         } while(choice2.equals("Yes"));
+    }
+
+    private static void addToPlaylist(int songId) throws SQLException, ClassNotFoundException {
+        List<Playlist> playlists;
+        PlaylistDao playlistDao = new PlaylistDao();
+        int playlistId;
+        System.out.println("\nPlaylists: ");
+        System.out.format("%-20s %-30s\n", "Playlist ID", "Playlist Name");
+        playlists = playlistDao.getPlaylistDetails();
+        for(Playlist playlist2: playlists)
+            System.out.format("%-20d %-30s\n", playlist2.getPlaylistID(), playlist2.getPlaylistName());
+        System.out.println("Enter playlist id or enter 0 to go back: ");
+        playlistId = sc.nextInt();
+        sc.nextLine();
+        if(playlistId != 0)
+            playlistDao.updatePlaylist(songId, playlistId);
     }
 
     private static void playOrPauseSong(int songId) throws UnsupportedAudioFileException, LineUnavailableException, IOException, SQLException, ClassNotFoundException {
@@ -140,7 +158,7 @@ public class JukeboxMain {
             if (choice == 1)
                 playOrPauseSong(songId);
             else if (choice == 2)
-                System.out.println("Added to playlist");
+                addToPlaylist(songId);
             else if (choice == 3) {
                 System.out.println("Going back");
                 break;
@@ -185,7 +203,7 @@ public class JukeboxMain {
             if (choice == 1)
                 playOrPauseSong(songId);
             else if (choice == 2)
-                System.out.println("Added to playlist");
+                addToPlaylist(songId);
             else if (choice == 3) {
                 System.out.println("Going back");
                 break;
@@ -209,9 +227,120 @@ public class JukeboxMain {
 
     }
 
-    private static void playlist() {
+    private static void playlist() throws SQLException, ClassNotFoundException {
+        int choice;
+        int id;
+        Playlist playlist = new Playlist();
+        PlaylistDao playlistDao = new PlaylistDao();
+        SongsDao songsDao = new SongsDao();
+        List<Playlist> playlists;
+        do {
+            System.out.println("\n1. Create new playlist \n2. View existing playlist \n3. Delete existing playlist \n4. Go back \nEnter choice:");
+            choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice){
+                case 1:
+                    System.out.println("\nEnter playlist name:");
+                    playlist.setPlaylistName(sc.nextLine());
+                    playlistDao.insertIntoPlaylist(playlist);
+                    break;
+                case 2:
+                    System.out.println("\nPlaylists: ");
+                    System.out.format("%-20s %-30s\n", "Playlist ID", "Playlist Name");
+                    playlists = playlistDao.getPlaylistDetails();
+                    for(Playlist playlist2: playlists)
+                        System.out.format("%-20d %-30s\n", playlist2.getPlaylistID(), playlist2.getPlaylistName());
+                    System.out.println("Enter playlist id: ");
+                    id = sc.nextInt();
+                    System.out.println("Playlist songs: ");
+                    String content = playlistDao.getPlaylistContent(id);
+                    String[] split =  content.split(",");
+                    int[] songIds = new int[split.length];
+                    for(int i = 0; i < split.length - 1; i++)
+                        songIds[i] = Integer.parseInt(split[i].trim());
+                    List<Songs> songsList = songsDao.getSongsList(songIds);
+                    printSongList(songsList);
+                    break;
+                case 3:
+                    System.out.println("Playlists: ");
+                    System.out.format("%-10s %-30s\n", "Playlist ID", "Playlist Name");
+                    playlists = playlistDao.getPlaylistDetails();
+                    for(Playlist playlist2: playlists)
+                        System.out.format("%-10d %-30s\n", playlist2.getPlaylistID(), playlist2.getPlaylistName());
+                    System.out.println("Enter playlist id: ");
+                    id = sc.nextInt();
+                    playlistDao.deletePlaylist(id);
+                    break;
+                case 4:
+                    System.out.println("Going back");
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+            }
+        } while(choice != 4);
     }
 
-    private static void jukeboxOperations() {
+    private static void jukeboxOperations() throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
+        List<Playlist> playlists;
+        PlaylistDao playlistDao = new PlaylistDao();
+        int playlistId;
+        System.out.println("\nPlaylists: ");
+        System.out.format("%-20s %-30s\n", "Playlist ID", "Playlist Name");
+        playlists = playlistDao.getPlaylistDetails();
+        for(Playlist playlist2: playlists)
+            System.out.format("%-20d %-30s\n", playlist2.getPlaylistID(), playlist2.getPlaylistName());
+        System.out.println("Enter playlist id or enter 0 to go back: ");
+        playlistId = sc.nextInt();
+        sc.nextLine();
+        if(playlistId != 0){
+            String content = playlistDao.getPlaylistContent(playlistId);
+            playOrPauseSong(content);
+        }
+    }
+
+    private static void playOrPauseSong(String content) throws SQLException, ClassNotFoundException, UnsupportedAudioFileException, LineUnavailableException, IOException {
+        int choice, i;
+        SongsDao songsDao = new SongsDao();
+        String[] split = content.split(",");
+        int[] songIds = new int[split.length];
+        int count = split.length - 1;
+        for(i = 0; i < split.length - 1; i++)
+            songIds[i] = Integer.parseInt(split[i].trim());
+        i= 0;
+        String filePath = songsDao.checkIdAndGetSong(songIds[i]);
+        AudioPlayer audioPlayer = new AudioPlayer(filePath);
+        audioPlayer.play();
+        do{
+            System.out.println("\n1. Play \n2. Pause \n3. Next \n4. Previous \n5. Exit \nEnter choice :");
+            choice = sc.nextInt();
+            sc.nextLine();
+            if(choice == 1)
+                audioPlayer.resume();
+            else if(choice == 2)
+                audioPlayer.pause();
+            else if(choice == 3) {
+                if (i == count - 1)
+                    i = 0;
+                else
+                    i++;
+                audioPlayer.pause();
+                filePath = songsDao.checkIdAndGetSong(songIds[i]);
+                audioPlayer = new AudioPlayer(filePath);
+                audioPlayer.play();
+            }
+            else if(choice == 4) {
+                if (i == 0)
+                    i = count -1;
+                else
+                    i--;
+                audioPlayer.pause();
+                filePath = songsDao.checkIdAndGetSong(songIds[i]);
+                audioPlayer = new AudioPlayer(filePath);
+                audioPlayer.play();
+            }
+            else
+                audioPlayer.pause();
+
+        } while(choice != 5);
     }
 }
